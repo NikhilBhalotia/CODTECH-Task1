@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="quiz-container">
+        <div id="quiz">
+            <div class="question-container">
+                <h2 id="question">Question text</h2>
+                <div class="options-container">
+                    <label>
+                        <input type="radio" name="answer" class="answer" id="a">
+                        <span id="a_text">Answer A</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="answer" class="answer" id="b">
+                        <span id="b_text">Answer B</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="answer" class="answer" id="c">
+                        <span id="c_text">Answer C</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="answer" class="answer" id="d">
+                        <span id="d_text">Answer D</span>
+                    </label>
+                </div>
+            </div>
+            <button id="submit">Submit</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+.quiz-container {
+    width: 400px;
+    margin: 100px auto;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 22px;
+}
+
+.options-container label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+
+const quizData = [
+    {
+        question: "What is the capital of France?",
+        a: "Berlin",
+        b: "Madrid",
+        c: "Paris",
+        d: "Rome",
+        correct: "c"
+    },
+    {
+        question: "Which language is used for web development?",
+        a: "Python",
+        b: "JavaScript",
+        c: "C++",
+        d: "Java",
+        correct: "b"
+    },
+    {
+        question: "Who wrote 'To Kill a Mockingbird'?",
+        a: "Harper Lee",
+        b: "J.K. Rowling",
+        c: "F. Scott Fitzgerald",
+        d: "Ernest Hemingway",
+        correct: "a"
+    }
+];
+
+let currentQuiz = 0;
+let score = 0;
+
+const questionEl = document.getElementById('question');
+const a_text = document.getElementById('a_text');
+const b_text = document.getElementById('b_text');
+const c_text = document.getElementById('c_text');
+const d_text = document.getElementById('d_text');
+const submitBtn = document.getElementById('submit');
+const answersEls = document.querySelectorAll('.answer');
+
+loadQuiz();
+
+function loadQuiz() {
+    deselectAnswers();
+    
+    const currentQuizData = quizData[currentQuiz];
+    
+    questionEl.innerText = currentQuizData.question;
+    a_text.innerText = currentQuizData.a;
+    b_text.innerText = currentQuizData.b;
+    c_text.innerText = currentQuizData.c;
+    d_text.innerText = currentQuizData.d;
+}
+
+function deselectAnswers() {
+    answersEls.forEach(answerEl => answerEl.checked = false);
+}
+
+function getSelected() {
+    let answer;
+    answersEls.forEach(answerEl => {
+        if (answerEl.checked) {
+            answer = answerEl.id;
+        }
+    });
+    return answer;
+}
+
+submitBtn.addEventListener('click', () => {
+    const answer = getSelected();
+    
+    if (answer) {
+        if (answer === quizData[currentQuiz].correct) {
+            score++;
+        }
+
+        currentQuiz++;
+
+        if (currentQuiz < quizData.length) {
+            loadQuiz();
+        } else {
+            quiz.innerHTML = `
+                <h2>You answered correctly at ${score}/${quizData.length} questions.</h2>
+                <button onclick="location.reload()">Reload</button>
+            `;
+        }
+    }
+});
+
